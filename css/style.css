@@ -71,13 +71,25 @@ main, .site-head, .site-foot { position: relative; z-index: 1; }
 .head-inner { display: flex; align-items: center; justify-content: space-between; height: 66px; }
 
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+
+/*
+  علامة مؤقّتة حتى يصل الشعار. `.brand-logo` جاهزة بنفس المقاس، فالتبديل
+  سطرٌ واحد في index.html بلا لمس التنسيق.
+
+  ⚠️ الحرفان `NL` أضيق من حرف واحد بصرياً، فالخط 14px لا 17px وبتباعد
+  سالب — وإلا بدت العلامة مزدحمة داخل المربّع.
+*/
 .brand-mark {
   display: grid; place-items: center;
-  width: 34px; height: 34px; border-radius: 10px;
+  width: 34px; height: 34px; border-radius: 10px; flex: none;
   background: linear-gradient(135deg, var(--brand), var(--brand-2));
-  color: var(--on-brand); font-weight: 800; font-size: 17px;
+  color: var(--on-brand); font-weight: 800; font-size: 14px; letter-spacing: -.02em;
 }
-.brand-text { font-weight: 800; font-size: 19px; }
+.brand-logo { width: 34px; height: 34px; border-radius: 10px; object-fit: contain; flex: none; }
+
+/* ⚠️ `Next Level` لاتينية داخل صفحة RTL: `dir="ltr"` في HTML يمنع إعادة
+   ترتيب الكلمتين، وهذا يضبط المسافة بعد العلامة في الاتجاهين. */
+.brand-text { font-weight: 800; font-size: 19px; letter-spacing: -.01em; }
 
 .ghost-btn {
   display: inline-flex; align-items: center; gap: 7px;
