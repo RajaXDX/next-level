@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>رجا — الألعاب والمشاريع</title>
+
+<meta name="description" content="بوابة ألعاب ومشاريع رجا: تحدي رجا، حروف مع رجا، وغيرها.">
+<meta name="theme-color" content="#0A1A14">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="رجا — الألعاب والمشاريع">
+<meta property="og:description" content="كل الألعاب والمشاريع في مكان واحد.">
+<meta property="og:url" content="https://rajaxdx.github.io/">
+<meta property="og:image" content="https://rajaxdx.github.io/assets/raja-challenge.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="assets/raja-challenge.png">
+<link rel="apple-touch-icon" href="assets/raja-challenge.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css?v=2">
+</head>
+<body>
+
+<div class="glow glow-a" aria-hidden="true"></div>
+<div class="glow glow-b" aria-hidden="true"></div>
+
+<header class="site-head">
+  <div class="wrap head-inner">
+    <a class="brand" href="./">
+      <span class="brand-mark">R</span>
+      <span class="brand-text">رجا</span>
+    </a>
+    <button id="adminBtn" class="ghost-btn" title="لوحة الإدارة">⚙️<span>الإدارة</span></button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">صنعتها بنفسي · عربية بالكامل</p>
+      <h1>ألعاب تُلعب مع الناس<br><span class="accentize">لا وحدك</span></h1>
+      <p class="lede">
+        ألعاب جماعية عربية للاستراحة والمجلس والعزايم — تفتحها من المتصفح
+        بلا تحميل ولا تثبيت. تحت كل بطاقة رابط يشتغل الآن.
+      </p>
+      <div class="hero-meta">
+        <span><strong id="projectCount">—</strong> مشاريع</span>
+        <span class="dot" aria-hidden="true">·</span>
+        <span>تشتغل على الجوال والكمبيوتر</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="projects">
+    <div class="wrap">
+      <div id="grid" class="grid" aria-busy="true">
+        <div class="card skeleton"></div>
+        <div class="card skeleton"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot-inner">
+    <span>© <span id="year">2026</span> رجا</span>
+    <a href="https://github.com/RajaXDX" target="_blank" rel="noopener noreferrer">GitHub</a>
+  </div>
+</footer>
+
+<!-- ============================ لوحة الإدارة ============================ -->
+<div id="adminModal" class="modal" role="dialog" aria-modal="true" aria-label="لوحة الإدارة">
+  <div class="modal-box">
+    <button id="adminClose" class="modal-close" aria-label="إغلاق">✕</button>
+
+    <!-- الدخول -->
+    <div id="adminLogin">
+      <h2>لوحة الإدارة</h2>
+      <p class="hint">ادخل بحساب الإدارة نفسه المستعمل في تحدي رجا.</p>
+      <form id="loginForm" class="stack">
+        <label>البريد
+          <input id="adminEmail" type="email" autocomplete="username" required>
+        </label>
+        <label>كلمة المرور
+          <input id="adminPass" type="password" autocomplete="current-password" required>
+        </label>
+        <button id="loginBtn" class="primary" type="submit">دخول</button>
+      </form>
+    </div>
+
+    <!-- اللوحة -->
+    <div id="adminPanel" hidden>
+      <div class="panel-head">
+        <h2>المشاريع</h2>
+        <div class="panel-actions">
+          <button id="newBtn" class="primary">+ مشروع</button>
+          <button id="logoutBtn" class="ghost-btn">خروج</button>
+        </div>
+      </div>
+
+      <div id="adminList" class="alist"></div>
+
+      <!-- النموذج -->
+      <div id="adminForm" hidden>
+        <h3 id="formTitle">مشروع جديد</h3>
+        <form id="projectForm" class="stack">
+          <div class="row2">
+            <label>الاسم *<input id="pName" required></label>
+            <label>الإيموجي<input id="pEmoji" maxlength="4"></label>
+          </div>
+
+          <label>السطر التعريفي<input id="pTagline" placeholder="لعبة أسئلة جماعية بفريقين"></label>
+          <label>الرابط *<input id="pUrl" type="url" required placeholder="https://…"></label>
+
+          <label class="desc-label">
+            <span class="desc-head">
+              الوصف
+              <button id="aiBtn" class="ai-btn" type="button">✨ اكتب الوصف</button>
+            </span>
+            <textarea id="pDesc" rows="4" placeholder="اكتبه بنفسك، أو اكتب ملاحظات سريعة واضغط «اكتب الوصف»"></textarea>
+          </label>
+
+          <div class="row2">
+            <label>الصورة (مسار)<input id="pImage" placeholder="assets/name.png"></label>
+            <label>اللون<input id="pAccent" type="color" value="#D4AF37"></label>
+          </div>
+
+          <div class="row2">
+            <label>الحالة
+              <select id="pStatus">
+                <option value="live">يشتغل</option>
+                <option value="wip">قيد التطوير</option>
+                <option value="hidden">مخفي</option>
+              </select>
+            </label>
+            <label>الترتيب<input id="pOrder" type="number" value="0"></label>
+          </div>
+
+          <label>الوسوم (مفصولة بفاصلة)<input id="pTags" placeholder="أونلاين، فريقان، عربي"></label>
+
+          <div class="form-actions">
+            <button id="saveBtn" class="primary" type="submit">حفظ</button>
+            <button id="cancelBtn" class="ghost-btn" type="button">إلغاء</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- مفتاح الذكاء الاصطناعي -->
+      <details class="aikey">
+        <summary>مفتاح Claude API <span id="aiKeyState" class="key-state">— غير محفوظ</span></summary>
+        <p class="hint">
+          يُحفظ في <strong>هذا الجهاز وحده</strong> (localStorage) ولا يدخل المستودع
+          ولا يصل أي زائر. لهذا زر «اكتب الوصف» يشتغل من جهازك فقط.
+        </p>
+        <div class="row2">
+          <input id="aiKey" type="password" placeholder="sk-ant-…" autocomplete="off">
+          <button id="aiKeySave" class="ghost-btn" type="button">حفظ</button>
+        </div>
+      </details>
+    </div>
+  </div>
+</div>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js?v=2"></script>
+<script src="js/admin.js?v=2"></script>
+<script src="js/app.js?v=2"></script>
+</body>
+</html>
