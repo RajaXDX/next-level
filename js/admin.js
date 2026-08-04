@@ -45,6 +45,12 @@ function showPanel() {
   document.getElementById('adminLogin').hidden = true;
   document.getElementById('adminPanel').hidden = false;
   renderAdminList();
+
+  // بلا جدول لا معنى لزر الإضافة: الحفظ سيفشل حتماً
+  const newBtn = document.getElementById('newBtn');
+  newBtn.disabled = tableMissing;
+  newBtn.title = tableMissing ? 'شغّل supabase-projects.sql أولاً' : '';
+
   document.getElementById('aiKeyState').textContent =
     localStorage.getItem(AI_KEY_STORE) ? '✅ محفوظ في هذا الجهاز' : '— غير محفوظ';
 }
@@ -96,16 +102,46 @@ async function adminLogout() {
   loadProjects();
 }
 
-// الإدمن يرى المخفي أيضاً — سياسة القراءة الثانية تسمح له بذلك
+/*
+  الإدمن يرى المخفي أيضاً — سياسة القراءة الثانية تسمح له بذلك.
+
+  ⚠️ الخطأ يُعرض ولا يُبتلع: قبلها كانت الدالة تتجاهل `error` بصمت، فإن
+  لم يكن الجدول منشأً بعد فتحت اللوحة **وبدت سليمة** وهي تعرض النسخة
+  الاحتياطية من الكود — بلا معرّفات، فالتعديل والحذف لا يفعلان شيئاً
+  والحفظ يفشل. مستخدم في هذه الحالة يظنّ العطل في زر الإدارة.
+*/
+let tableMissing = false;
+
 async function reloadForAdmin() {
-  const { data } = await supa.from('projects').select('*').order('sort_order');
+  const { data, error } = await supa.from('projects').select('*').order('sort_order');
+
+  if (error) {
+    tableMissing = /schema cache|does not exist|relation/i.test(error.message);
+    return false;
+  }
+
+  tableMissing = false;
   if (Array.isArray(data)) { PROJECTS = data; renderProjects(); }
+  return true;
 }
 
 /* ------------------------------ القائمة ------------------------------ */
 
 function renderAdminList() {
   const box = document.getElementById('adminList');
+
+  // الجدول غير منشأ: نقول السبب والحلّ صراحةً بدل عرض قائمة لا تعمل
+  if (tableMissing) {
+    box.innerHTML = `
+      <div class="notice">
+        <strong>جدول المشاريع غير موجود بعد.</strong>
+        شغّل <code>supabase-projects.sql</code> على مشروع Supabase، ثم حدّث الصفحة.
+        <br>حتى ذلك الحين تُعرض للزوّار النسخة المحفوظة في الكود، ولا يمكن
+        الإضافة ولا التعديل من هنا.
+      </div>`;
+    return;
+  }
+
   if (!PROJECTS.length) { box.innerHTML = '<p class="empty">ما فيه مشاريع.</p>'; return; }
 
   box.innerHTML = PROJECTS.map(p => `
@@ -356,7 +392,9 @@ async function restoreAdminSession() {
     if (ok === true) {
       isAdmin = true;
       document.getElementById('adminBtn')?.classList.add('is-admin');
-      reloadForAdmin();
+      // ⚠️ await: `showPanel` تقرأ `tableMissing`، ولو فُتحت اللوحة قبل
+      // انتهاء هذا النداء لقرأتها قديمة فأظهرت قائمة لا تعمل
+      await reloadForAdmin();
     }
   } catch (_) { /* لا يضرّ الزائر: يبقى وضع القراءة */ }
 }
