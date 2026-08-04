@@ -31,6 +31,43 @@ function isExternal(u) {
   return /^https?:\/\//i.test(String(u || ''));
 }
 
+/*
+  لون النص فوق لون المشروع — يُحسب، لا يُثبَّت.
+
+  ⚠️ زر البطاقة خلفيته لون المشروع، واللون يختاره صاحب الموقع من منتقي
+  ألوان حرّ في اللوحة. نصّ داكن ثابت يقرأ جيداً على الذهبي والنعناعي
+  الحاليين، ويختفي تماماً أول ما يُختار لون داكن (كحلي، عنّابي) — والعطل
+  لا يظهر إلا بعد إضافة المشروع ونشره.
+
+  ⚠️ **نقارن التباين الفعلي، ولا نقارن الإضاءة بعتبة.** جرّبت العتبة
+  أولاً (`L > 0.45 ? داكن : فاتح`) فوقع ذهب تحدي رجا `#D4AF37` عليها
+  بالضبط — إضاءته 0.453 — فاختار **الأبيض بتباين 2.1:1**، أي زر لا
+  يُقرأ في الصفحة الرئيسية. أي عتبة تختارها يقع عليها لون ما؛ وحساب
+  النسبتين واختيار الأعلى صحيح عند كل نقطة بلا معايرة.
+*/
+function relLuminance(hex) {
+  const v = /^#([0-9a-f]{6})$/i.exec(hex)[1];
+  const lin = i => {
+    const c = parseInt(v.slice(i, i + 2), 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  };
+  return 0.2126 * lin(0) + 0.7152 * lin(2) + 0.0722 * lin(4);
+}
+
+function onColor(hex) {
+  const clean = String(hex || '').trim();
+  if (!/^#[0-9a-f]{6}$/i.test(clean)) return '#12100E';   // لون غير مفهوم → داكن
+
+  const bg = relLuminance(clean);
+  const contrast = (a, b) => {
+    const [hi, lo] = a > b ? [a, b] : [b, a];
+    return (hi + 0.05) / (lo + 0.05);
+  };
+
+  const DARK = '#12100E', LIGHT = '#FFFFFF';
+  return contrast(bg, relLuminance(DARK)) >= contrast(bg, relLuminance(LIGHT)) ? DARK : LIGHT;
+}
+
 /* ------------------------------ التحميل ------------------------------ */
 
 async function loadProjects() {
@@ -100,7 +137,7 @@ function cardHtml(p) {
     : `<span class="card-emoji">${esc(p.emoji || '🎮')}</span>`;
 
   return `
-    <article class="card${wip ? ' is-wip' : ''}" style="--accent:${esc(accent)}">
+    <article class="card${wip ? ' is-wip' : ''}" style="--accent:${esc(accent)};--on-accent:${esc(onColor(accent))}">
       <div class="card-top">
         <div class="card-visual">${visual}</div>
         ${wip ? '<span class="badge">قيد التطوير</span>' : '<span class="badge badge-live">تشتغل الآن</span>'}

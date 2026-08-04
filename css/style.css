@@ -1,52 +1,17 @@
 /* ============================= بوابة رجا ============================= */
 /*
+  الهوية: فحمي + كهرماني.
+
   ⚠️ **`--brand` لون البوابة، و`--accent` لون المشروع.** كل بطاقة تضبط
   `--accent` في `style=` من قاعدة البيانات، فتبقى هوية كل لعبة ظاهرة
-  داخل إطار واحد مهما تغيّرت ألوان البوابة. لا تدمج الاثنين.
+  داخل إطار واحد ولا تذوب في لون البوابة. لا تدمج الاثنين في متغيّر واحد.
 
-  الأطقم تحت مضبوطة على `body[data-theme]`. الافتراضي (بلا سمة) هو
-  «نجدي». التبديل بـ `js/theme-preview.js` — ملف مؤقّت يُحذف قبل النشر.
+  📌 كانت هنا خمسة أطقم ومبدّل بينها للاختيار (commit 0965dae). حُذفت
+  بعد الاستقرار على هذا: الطقم غير المستعمل كود ميت، وسجلّ git يحفظها
+  إن أردت العودة.
 */
 
-:root, body[data-theme="najdi"] {
-  --bg: #0A1A14;
-  --bg-2: #0C2119;
-  --surface: #12382A;
-  --brand: #D4AF37;
-  --brand-2: #B8860B;
-  --text: #EFE3C6;
-  --muted: #9FB8AB;
-  --on-brand: #0A1A14;
-  --card-a: rgba(18, 56, 42, .62);
-  --card-b: rgba(12, 33, 25, .62);
-  --line: rgba(212, 175, 55, .16);
-  --line-soft: rgba(239, 227, 198, .09);
-  --glow-1: rgba(212, 175, 55, .13);
-  --glow-2: rgba(63, 167, 150, .11);
-  --success: #3FA796;
-  --error: #E74C3C;
-}
-
-body[data-theme="night-blue"] {
-  --bg: #0B1220;
-  --bg-2: #0F1729;
-  --surface: #16203A;
-  --brand: #38BDF8;
-  --brand-2: #0EA5E9;
-  --text: #E6EDF7;
-  --muted: #8AA0B8;
-  --on-brand: #061018;
-  --card-a: rgba(22, 32, 58, .62);
-  --card-b: rgba(11, 18, 32, .62);
-  --line: rgba(56, 189, 248, .18);
-  --line-soft: rgba(230, 237, 247, .09);
-  --glow-1: rgba(56, 189, 248, .14);
-  --glow-2: rgba(129, 140, 248, .12);
-  --success: #34D399;
-  --error: #F87171;
-}
-
-body[data-theme="amber"] {
+:root {
   --bg: #0D0D0F;
   --bg-2: #131316;
   --surface: #1C1C21;
@@ -63,49 +28,8 @@ body[data-theme="amber"] {
   --glow-2: rgba(255, 205, 100, .08);
   --success: #4ADE80;
   --error: #F87171;
+  --radius: 18px;
 }
-
-body[data-theme="violet"] {
-  --bg: #140A24;
-  --bg-2: #1B0F2E;
-  --surface: #271640;
-  --brand: #C084FC;
-  --brand-2: #A855F7;
-  --text: #EDE6F7;
-  --muted: #A793BD;
-  --on-brand: #16062B;
-  --card-a: rgba(39, 22, 64, .62);
-  --card-b: rgba(20, 10, 36, .62);
-  --line: rgba(192, 132, 252, .2);
-  --line-soft: rgba(237, 230, 247, .09);
-  --glow-1: rgba(192, 132, 252, .15);
-  --glow-2: rgba(244, 114, 182, .12);
-  --success: #4ADE80;
-  --error: #FB7185;
-}
-
-/* ⚠️ الطقم الفاتح ليس عكس الداكن بالمقلوب: الحدود تحتاج سواداً شفافاً
-   لا بياضاً، والظلال تحتاج تخفيفاً وإلا صارت بقعاً رمادية. */
-body[data-theme="light"] {
-  --bg: #F5F1E8;
-  --bg-2: #FFFFFF;
-  --surface: #FFFFFF;
-  --brand: #1B4D3E;
-  --brand-2: #143B2F;
-  --text: #14201B;
-  --muted: #5C6B63;
-  --on-brand: #F5F1E8;
-  --card-a: rgba(255, 255, 255, .9);
-  --card-b: rgba(250, 247, 240, .9);
-  --line: rgba(27, 77, 62, .18);
-  --line-soft: rgba(20, 32, 27, .1);
-  --glow-1: rgba(27, 77, 62, .09);
-  --glow-2: rgba(212, 175, 55, .1);
-  --success: #157F5F;
-  --error: #C0392B;
-}
-
-:root { --radius: 18px; }
 
 * { box-sizing: border-box; }
 
@@ -267,16 +191,16 @@ main, .site-head, .site-foot { position: relative; z-index: 1; }
 }
 
 /*
-  ⚠️ نص الزر `--on-brand` لا لون ثابت: لون المشروع قد يكون فاتحاً (أخضر
-  نعناعي) أو داكناً، ونصّ ثابت يختفي على أحدهما. `color-mix` مع الأسود
-  يضمن تبايناً على الفاتح، والطقم الفاتح يقلبه عبر `--on-brand`.
+  ⚠️ `--on-accent` يحسبها app.js من إضاءة لون المشروع، ولا تُثبَّت هنا:
+  اللون يختاره صاحب الموقع من منتقي ألوان حرّ، ونصّ داكن ثابت يختفي
+  تماماً أول ما يُختار لون داكن. راجع `onColor()`.
 */
 .card-cta {
   margin-top: auto;
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   min-height: 46px; padding: 0 20px;                 /* 46px ≥ حد اللمس 44px */
   background: var(--accent, var(--brand));
-  color: #0A1A14; font-weight: 800; font-size: 15px;
+  color: var(--on-accent, #12100E); font-weight: 800; font-size: 15px;
   text-decoration: none; border-radius: 12px;
   transition: transform .18s, filter .18s;
 }
@@ -438,26 +362,3 @@ input[type=color] { height: 44px; padding: 4px; cursor: pointer; }
   #adminBtn { padding: 0 12px; }
 }
 
-/* ==================== مبدّل الأطقم (مؤقّت — يُحذف قبل النشر) ==================== */
-
-.theme-switch {
-  position: fixed; inset-block-end: 18px; inset-inline-end: 18px; z-index: 300;
-  display: flex; align-items: center; gap: 8px;
-  padding: 9px 12px;
-  background: var(--bg-2); border: 1px solid var(--line);
-  border-radius: 14px; box-shadow: 0 10px 30px -12px rgba(0,0,0,.6);
-}
-.theme-switch b { font-size: 11.5px; color: var(--muted); font-weight: 600; }
-.theme-swatch {
-  width: 30px; height: 30px; border-radius: 9px; cursor: pointer;
-  border: 2px solid transparent; padding: 0;
-  transition: transform .15s, border-color .15s;
-}
-.theme-swatch:hover { transform: scale(1.12); }
-.theme-swatch[aria-pressed="true"] { border-color: var(--text); }
-
-@media (max-width: 640px) {
-  .theme-switch { inset-block-end: 12px; inset-inline-end: 12px; padding: 7px 9px; gap: 6px; }
-  .theme-switch b { display: none; }
-  .theme-swatch { width: 34px; height: 34px; }   /* أكبر على اللمس */
-}
