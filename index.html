@@ -22,7 +22,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="css/style.css?v=7">
+<link rel="stylesheet" href="css/style.css?v=8">
 </head>
 <body>
 
@@ -84,10 +84,13 @@
     <!-- الدخول -->
     <div id="adminLogin">
       <h2>لوحة الإدارة</h2>
-      <p class="hint">ادخل بحساب الإدارة نفسه المستعمل في تحدي رجا.</p>
+      <p class="hint">بحساب الإدارة نفسه المستعمل في تحدي رجا — باسم المستخدم أو بالبريد.</p>
       <form id="loginForm" class="stack">
-        <label>البريد
-          <input id="adminEmail" type="email" autocomplete="username" required>
+        <label>اسم المستخدم أو البريد
+          <!-- ⚠️ type="text" لا "email": المتصفح يرفض `vip` مع type="email"،
+               وحسابات اللعبة القديمة اسمُها بلا بريد يعرفه صاحبها. -->
+          <input id="adminEmail" type="text" autocomplete="username"
+                 placeholder="vip" required>
         </label>
         <label>كلمة المرور
           <input id="adminPass" type="password" autocomplete="current-password" required>
@@ -172,9 +175,9 @@
 <div id="toasts" class="toasts" aria-live="polite"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/config.js?v=7"></script>
-<script src="js/admin.js?v=7"></script>
-<script src="js/app.js?v=7"></script>
+<script src="js/config.js?v=8"></script>
+<script src="js/admin.js?v=8"></script>
+<script src="js/app.js?v=8"></script>
 
 </body>
 </html>

@@ -56,19 +56,56 @@ function showPanel() {
 }
 
 /* ------------------------------ الدخول ------------------------------ */
+/*
+  ⚠️ **الدخول باسم المستخدم أو بالبريد — مطابق لتحدي رجا حرفياً.**
+
+  حسابات اللعبة القديمة بريدها **مشتقّ من بصمة الاسم** ولا يعرفه صاحبه
+  أصلاً (`js/auth.js` في تحدي رجا). فلوحة تطلب بريداً فقط تقفل الباب في
+  وجه صاحب الموقع نفسه: حسابه اسمه `vip` وما فيه بريد يكتبه.
+
+  ⚠️ **الاشتقاق لازم يطابق تحدي رجا بايتاً ببايت** — نفس البادئة `raja:`
+  ونفس التطبيع ونفس أول 32 محرفاً من SHA-256. أي فرق يُنتج بريداً آخر،
+  فيفشل الدخول بحساب صحيح تماماً بلا سبب ظاهر.
+*/
+const ACCOUNT_EMAIL_DOMAIN = 'raja-players.com';
+
+function normalizeUsername(name) {
+  return String(name || '').trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
+async function usernameToEmail(name) {
+  const clean = normalizeUsername(name);
+  const bytes = new TextEncoder().encode('raja:' + clean);
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  const hex = [...new Uint8Array(digest)]
+    .map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
+  return `u${hex}@${ACCOUNT_EMAIL_DOMAIN}`;
+}
 
 async function adminLogin(e) {
   e?.preventDefault();
-  const email = document.getElementById('adminEmail').value.trim();
+  const raw = document.getElementById('adminEmail').value.trim();
   const pass = document.getElementById('adminPass').value;
   const btn = document.getElementById('loginBtn');
 
-  if (!email || !pass) return toast('اكتب البريد وكلمة المرور', 'error');
+  if (!raw || !pass) return toast('اكتب اسم المستخدم (أو البريد) وكلمة المرور', 'error');
   if (!supa) return toast('تعذّر الاتصال بقاعدة البيانات', 'error');
 
   btn.disabled = true; btn.textContent = 'جاري الدخول…';
   try {
-    const { error } = await supa.auth.signInWithPassword({ email, password: pass });
+    // المسار الأول: بريد صريح إن كتب @، وإلا البريد المشتقّ من الاسم
+    let { error } = await supa.auth.signInWithPassword({
+      email: raw.includes('@') ? raw.toLowerCase() : await usernameToEmail(raw),
+      password: pass
+    });
+
+    // المسار الثاني: بعض الحسابات سُجّلت ببريد حقيقي واسمها يشبهه —
+    // نجرّب النصّ كما هو قبل أن نعلن الفشل (نفس تدبير تحدي رجا)
+    if (error && !raw.includes('@')) {
+      const alt = await supa.auth.signInWithPassword({ email: raw.toLowerCase(), password: pass });
+      if (!alt.error) error = null;
+    }
+
     if (error) throw error;
 
     // ⚠️ الدخول وحده لا يكفي: أي حساب لاعب في تحدي رجا يقدر يسجّل دخوله
