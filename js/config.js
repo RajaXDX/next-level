@@ -52,5 +52,16 @@ const FALLBACK_PROJECTS = [
     accent: '#86EFAC',
     status: 'live',
     tags: ['محلي', 'فريقان', 'عربي']
+  },
+  {
+    name: 'توب تن',
+    tagline: 'لعبة قوائم العشرة بين شخصين',
+    description: 'كل سؤال قائمة من عشرة مرتّبة، ولاعبان يتناوبان على ذكر ما يعرفانه. النقاط برقم المركز — المركز العاشر يعطي عشر نقاط لأنه أصعب تذكّراً. تُلعب على جهاز واحد بلا إنترنت ولا حساب.',
+    url: 'https://rajaxdx.github.io/top-ten/',
+    image: null,
+    emoji: '🔟',
+    accent: '#FBBF24',
+    status: 'live',
+    tags: ['محلي', 'شخصان', 'عربي']
   }
 ];
