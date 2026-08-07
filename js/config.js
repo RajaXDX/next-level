@@ -58,7 +58,7 @@ const FALLBACK_PROJECTS = [
     tagline: 'لعبة قوائم العشرة بين شخصين',
     description: 'كل سؤال قائمة من عشرة مرتّبة، ولاعبان يتناوبان على ذكر ما يعرفانه. النقاط برقم المركز — المركز العاشر يعطي عشر نقاط لأنه أصعب تذكّراً. أنشئ روم وأرسل الكود، وكل واحد يلعب من جواله.',
     url: 'https://rajaxdx.github.io/top-ten/',
-    image: null,
+    image: 'assets/top-ten.png',
     emoji: '🔟',
     accent: '#FBBF24',
     status: 'live',
