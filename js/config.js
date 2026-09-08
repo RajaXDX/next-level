@@ -63,5 +63,16 @@ const FALLBACK_PROJECTS = [
     accent: '#FBBF24',
     status: 'live',
     tags: ['أونلاين', 'شخصان', 'عربي']
+  },
+  {
+    name: 'فكّها',
+    tagline: 'لعبة كلمات فردية بمئة مستوى',
+    description: 'كلمة مخفية ولوحة حروف: الحرف الصحيح يظهر في كل مواضعه، والخاطئ يأكل محاولة. مئة مستوى تتصاعد صعوبتها، ولكل مستوى خمس نقاط وثلاثة تلميحات — وكل تلميح يحسم نقطة. بلا إنترنت ولا حساب.',
+    url: 'https://rajaxdx.github.io/fakkaha-raja/',
+    image: 'assets/fakkaha-raja.png',
+    emoji: '🔓',
+    accent: '#3FE0B0',
+    status: 'live',
+    tags: ['فردي', 'محلي', 'عربي']
   }
 ];

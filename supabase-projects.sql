@@ -124,3 +124,31 @@ SELECT name, status, sort_order FROM projects ORDER BY sort_order;
 
 SELECT policyname, cmd, roles FROM pg_policies
 WHERE tablename = 'projects' ORDER BY policyname;
+
+
+-- ==================== إضافة لاحقة: «فكّها» ====================
+--
+-- المشاريع التي تُضاف بعد الإعداد الأول تدخل عادةً من لوحة الإدارة في
+-- الموقع، وهذا الإدراج هنا للحالتين اللتين لا تكفي فيهما اللوحة:
+-- إعادة بناء قاعدة البيانات من الصفر، أو إضافةٌ بلا تسجيل دخول.
+-- شغّله من محرّر Supabase (يعمل بصلاحية المالك فيتجاوز is_admin()).
+--
+-- ⚠️ عدّل معه FALLBACK_PROJECTS في js/config.js — النسختان يجب أن
+-- تتطابقا، وإلا اختلفت البوابة عن نفسها لحظة تعطّل قاعدة البيانات.
+
+INSERT INTO projects (name, tagline, description, url, image, emoji, accent, status, tags, sort_order)
+VALUES
+  (
+    'فكّها',
+    'لعبة كلمات فردية بمئة مستوى',
+    'كلمة مخفية ولوحة حروف: الحرف الصحيح يظهر في كل مواضعه، والخاطئ يأكل محاولة. مئة مستوى تتصاعد صعوبتها كلمةً ومحاولاتٍ، ولكل مستوى خمس نقاط وثلاثة تلميحات — وكل تلميح يحسم نقطة، فمن أخذها كلها بقيت له نقطتان. تُلعب على جهاز واحد بلا إنترنت ولا حساب، والتقدّم محفوظ في المتصفح.',
+    'https://rajaxdx.github.io/fakkaha-raja/',
+    'assets/fakkaha-raja.png',
+    '🔓',
+    '#3FE0B0',
+    'live',
+    '["فردي","محلي","عربي"]'::jsonb,
+    4
+  )
+ON CONFLICT DO NOTHING;
+
