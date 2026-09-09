@@ -159,3 +159,32 @@ WHERE NOT EXISTS (
 
 -- التحقق: المتوقّع أربعة صفوف، آخرها «فكّها»
 SELECT name, status, sort_order FROM projects ORDER BY sort_order;
+
+
+-- ==================== إضافة لاحقة: «صقر الوطن» ====================
+--
+-- نفس حالة «فكّها» أعلاه: المعتاد أن يدخل المشروع من لوحة الإدارة،
+-- وهذا الإدراج لإعادة بناء قاعدة البيانات من الصفر أو للإضافة بلا تسجيل دخول.
+-- شغّله من محرّر Supabase (يعمل بصلاحية المالك فيتجاوز is_admin()).
+--
+-- ⚠️ الحارس `WHERE NOT EXISTS` لا `ON CONFLICT` — للسبب المذكور فوق.
+-- ⚠️ ومعه FALLBACK_PROJECTS في js/config.js — النسختان تتطابقان (مُحدَّث أصلاً).
+
+INSERT INTO projects (name, tagline, description, url, image, emoji, accent, status, tags, sort_order)
+SELECT
+  'صقر الوطن',
+  'لعبة طيران لليوم الوطني',
+  'أنت صقر يعبر المملكة من رمال النَّفُود إلى البحر الأحمر: خمس مناطق لكل واحدة سماؤها وتضاريسها وعوائقها. المس لترتفع وارفع إصبعك لتنزلق، واجمع التمر والبيارق وتفادَ الصخور والعواصف. كل شيء مولَّد لحظياً — حتّى الموسيقى، فالمقام يتبدّل مع كل منطقة. بلا إنترنت ولا حساب.',
+  'https://rajaxdx.github.io/saqr-alwatan/',
+  'assets/saqr-alwatan.png',
+  '🦅',
+  '#006C35',
+  'live',
+  '["فردي","محلي","عربي"]'::jsonb,
+  5
+WHERE NOT EXISTS (
+  SELECT 1 FROM projects WHERE url = 'https://rajaxdx.github.io/saqr-alwatan/'
+);
+
+-- التحقق: المتوقّع خمسة صفوف، آخرها «صقر الوطن»
+SELECT name, status, sort_order FROM projects ORDER BY sort_order;
