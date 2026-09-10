@@ -188,3 +188,32 @@ WHERE NOT EXISTS (
 
 -- التحقق: المتوقّع خمسة صفوف، آخرها «صقر الوطن»
 SELECT name, status, sort_order FROM projects ORDER BY sort_order;
+
+
+-- ============== إضافة لاحقة: «اكتشف وطنك مع رجا» ==============
+--
+-- نفس حالة «فكّها» و«صقر الوطن»: المعتاد أن يدخل المشروع من لوحة الإدارة،
+-- وهذا الإدراج لإعادة بناء قاعدة البيانات من الصفر أو للإضافة بلا تسجيل دخول.
+-- شغّله من محرّر Supabase (يعمل بصلاحية المالك فيتجاوز is_admin()).
+--
+-- ⚠️ الحارس `WHERE NOT EXISTS` لا `ON CONFLICT` — للسبب المذكور فوق.
+-- ⚠️ ومعه FALLBACK_PROJECTS في js/config.js — النسختان تتطابقان (مُحدَّث أصلاً).
+
+INSERT INTO projects (name, tagline, description, url, image, emoji, accent, status, tags, sort_order)
+SELECT
+  'اكتشف وطنك مع رجا',
+  'لعبة أسئلة جماعية لليوم الوطني',
+  'لوحة من ست فئات وثلاثة مستويات عن الوطن: التوحيد والرموز والجغرافيا والملوك ورؤية ٢٠٣٠ والتراث. فريقان على جهاز واحد، ولكل فريق ثلاث وسائل مساعدة — الفخ يسرق نقاط خصمك، والحفرة تمنعه منها. أربعة وخمسون سؤالاً جاهزاً بلوحة إدارة تضيف وتعدّل عليها، وكل خانة تسحب سؤالها عشوائياً فما تتكرر الجولة. بلا إنترنت ولا حساب.',
+  'https://rajaxdx.github.io/ektashef-watanak-m3-raja/',
+  'assets/ektashef-watanak-m3-raja.png',
+  '🌴',
+  '#17A65C',
+  'live',
+  '["فريقان","محلي","عربي"]'::jsonb,
+  6
+WHERE NOT EXISTS (
+  SELECT 1 FROM projects WHERE url = 'https://rajaxdx.github.io/ektashef-watanak-m3-raja/'
+);
+
+-- التحقق: المتوقّع ستة صفوف، آخرها «اكتشف وطنك مع رجا»
+SELECT name, status, sort_order FROM projects ORDER BY sort_order;
