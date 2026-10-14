@@ -204,7 +204,7 @@ SELECT
   'اكتشف وطنك مع رجا',
   'لعبة أسئلة جماعية لليوم الوطني',
   'لوحة من ست فئات وثلاثة مستويات عن الوطن: التوحيد والرموز والجغرافيا والملوك وولي العهد ورؤية ٢٠٣٠ والتراث. فريقان على جهاز واحد، ولكل فريق ثلاث وسائل مساعدة — الفخ يسرق نقاط خصمك، والحفرة تمنعه منها. تسعة وستون سؤالاً جاهزاً بلوحة إدارة تضيف وتعدّل عليها، وكل خانة تسحب سؤالها عشوائياً فما تتكرر الجولة. بلا إنترنت ولا حساب.',
-  'https://rajaxdx.github.io/ektashef-watanak-m3-raja/',
+  'https://rajaxdx.github.io/watani/',
   'assets/ektashef-watanak-m3-raja.png',
   '🌴',
   '#17A65C',
@@ -212,8 +212,13 @@ SELECT
   '["فريقان","محلي","عربي"]'::jsonb,
   6
 WHERE NOT EXISTS (
-  SELECT 1 FROM projects WHERE url = 'https://rajaxdx.github.io/ektashef-watanak-m3-raja/'
+  SELECT 1 FROM projects WHERE url = 'https://rajaxdx.github.io/watani/'
 );
 
 -- التحقق: المتوقّع ستة صفوف، آخرها «اكتشف وطنك مع رجا»
 SELECT name, status, sort_order FROM projects ORDER BY sort_order;
+
+-- تصحيح رابط «اكتشف وطنك مع رجا» بعد ما تغيّر اسم المستودع إلى watani
+UPDATE projects
+SET url = 'https://rajaxdx.github.io/watani/'
+WHERE url = 'https://rajaxdx.github.io/ektashef-watanak-m3-raja/';
